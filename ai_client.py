@@ -18,13 +18,20 @@ BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / 'data'
 CONFIG_PATH = BASE_DIR / 'config.json'
 
-# 从 config.json 加载配置
-with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
-    _CONFIG = json.load(f)
+# 从 config.json 或环境变量加载配置
+import os
+_CONFIG = {}
+if CONFIG_PATH.exists():
+    try:
+        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+            _CONFIG = json.load(f)
+    except Exception:
+        pass
 
-API_KEY = _CONFIG.get('api_key', '')
-BASE_URL = _CONFIG.get('base_url', 'https://api-tokenmaster.com/v1')
-MODEL = _CONFIG.get('model', 'deepseek-chat')
+# 优先级：环境变量 > config.json > 默认值
+API_KEY = os.environ.get('API_KEY') or _CONFIG.get('api_key', '')
+BASE_URL = os.environ.get('BASE_URL') or _CONFIG.get('base_url', 'https://api.deepseek.com/v1')
+MODEL = os.environ.get('MODEL') or _CONFIG.get('model', 'deepseek-chat')
 
 AI_CONFIG = {
     'api_key': API_KEY,
