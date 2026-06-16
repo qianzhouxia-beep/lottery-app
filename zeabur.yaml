@@ -1,0 +1,11 @@
+# Zeabur deployment config
+# Force Python project detection (not static site)
+type: python
+
+# Build command
+build:
+  command: pip install -r requirements.txt
+
+# Start command  
+run:
+  command: python api_server.py
