@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>彩票预测系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Design System Tokens - Hermes Analytics
+   ============================================================ */
+:root {
+  /* Surface Colors */
+  --surface: #0b1326;
+  --surface-dim: #0b1326;
+  --surface-bright: #31394d;
+  --surface-container-lowest: #060e20;
+  --surface-container-low: #131b2e;
+  --surface-container: #171f33;
+  --surface-container-high: #222a3d;
+  --surface-container-highest: #2d3449;
+  --card-bg: #1E293B;
+
+  /* On Surface */
+  --on-surface: #dae2fd;
+  --on-surface-variant: #c7c4d7;
+  --inverse-surface: #dae2fd;
+  --inverse-on-surface: #283044;
+
+  /* Outline */
+  --outline: #908fa0;
+  --outline-variant: #464554;
+  --border-subtle: #334155;
+
+  /* Primary (Indigo - DLT) */
+  --primary: #c0c1ff;
+  --on-primary: #1000a9;
+  --primary-container: #8083ff;
+  --on-primary-container: #0d0096;
+  --inverse-primary: #494bd6;
+  --primary-fixed: #e1e0ff;
+  --primary-fixed-dim: #c0c1ff;
+  --on-primary-fixed: #07006c;
+  --on-primary-fixed-variant: #2f2ebe;
+
+  /* Secondary (Red - SSQ) */
+  --secondary: #ffb3ad;
+  --on-secondary: #68000a;
+  --secondary-container: #a40217;
+  --on-secondary-container: #ffaea8;
+  --secondary-fixed: #ffdad7;
+  --secondary-fixed-dim: #ffb3ad;
+  --on-secondary-fixed: #410004;
+  --on-secondary-fixed-variant: #930013;
+
+  /* Tertiary (Amber) */
+  --tertiary: #ffb783;
+  --on-tertiary: #4f2500;
+  --tertiary-container: #d97721;
+  --on-tertiary-container: #452000;
+  --tertiary-fixed: #ffdcc5;
+  --tertiary-fixed-dim: #ffb783;
+  --on-tertiary-fixed: #301400;
+  --on-tertiary-fixed-variant: #703700;
+
+  /* Semantic */
+  --error: #ffb4ab;
+  --on-error: #690005;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+  --success-emerald: #10B981;
+  --warning-amber: #F59E0B;
+
+  /* Text */
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  /* Ball Colors */
+  --ball-front-start: #EF4444;
+  --ball-front-end: #DC2626;
+  --ball-back-start: #3B82F6;
+  --ball-back-end: #2563EB;
+
+  /* Typography */
+  --font-main: "Inter", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Cascadia Code", monospace;
+  --font-icon: "Material Symbols Outlined";
+
+  /* Spacing (4px base) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-gutter: 16px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--surface);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ============================================================
+   Top Bar
+   ============================================================ */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(11, 19, 38, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.top-bar .logo {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.top-bar .logo-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success-emerald);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--success-emerald);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--success-emerald); }
+  50% { opacity: 0.7; box-shadow: 0 0 14px var(--success-emerald); }
+}
+
+.kind-select {
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  padding: 6px 28px 6px 12px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: var(--font-main);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: border-color 0.2s;
+}
+
+.kind-select:focus { outline: none; border-color: var(--primary); }
+.kind-select.dlt { border-color: var(--primary); }
+.kind-select.ssq { border-color: var(--secondary); }
+
+/* ============================================================
+   Status Bar
+   ============================================================ */
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 5px var(--space-lg);
+  background: var(--surface-container-lowest);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--success-emerald);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Main Content Area
+   ============================================================ */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-lg);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  background: var(--surface);
+}
+
+.main-content::-webkit-scrollbar { width: 4px; }
+.main-content::-webkit-scrollbar-track { background: transparent; }
+.main-content::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 2px;
+}
+
+/* ============================================================
+   Glass Card
+   ============================================================ */
+.glass-card {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================================
+   Tab Content Panels
+   ============================================================ */
+.tab-content {
+  display: none;
+  animation: tabFadeIn 250ms ease-out;
+}
+
+.tab-content.active { display: block; }
+
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   Ball Component
+   ============================================================ */
+.balls-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.ball {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.ball.front {
+  background: linear-gradient(135deg, var(--ball-front-start), var(--ball-front-end));
+  box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+}
+
+.ball.back {
+  background: linear-gradient(135deg, var(--ball-back-start), var(--ball-back-end));
+  box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+}
+
+.ball.size-lg { width: 44px; height: 44px; font-size: 16px; }
+.ball.size-md { width: 36px; height: 36px; font-size: 13px; }
+.ball.size-sm { width: 28px; height: 28px; font-size: 11px; }
+
+.ball.sep {
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 18px;
+  box-shadow: none;
+  width: 16px;
+}
+
+/* ============================================================
+   Hot/Cold Number Tags
+   ============================================================ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.tag.hot {
+  background: rgba(16,185,129,0.12);
+  color: var(--success-emerald);
+  border: 1px solid rgba(16,185,129,0.25);
+}
+
+.tag.cold {
+  background: rgba(245,158,11,0.12);
+  color: var(--warning-amber);
+  border: 1px solid rgba(245,158,11,0.25);
+}
+
+.tag.front {
+  background: rgba(239,68,68,0.1);
+  color: var(--ball-front-start);
+  border: 1px solid rgba(239,68,68,0.2);
+}
+
+.tag.back {
+  background: rgba(59,130,246,0.1);
+  color: var(--ball-back-start);
+  border: 1px solid rgba(59,130,246,0.2);
+}
+
+/* ============================================================
+   Zone Bar
+   ============================================================ */
+.zone-bar {
+  display: flex;
+  height: 24px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: var(--space-sm) 0;
+}
+
+.zone-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  transition: flex 0.4s ease;
+  min-width: 20px;
+  font-family: var(--font-mono);
+}
+
+.zone-legend {
+  display: flex;
+  gap: var(--space-md);
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.zone-legend span { display: flex; align-items: center; gap: 3px; }
+
+/* ============================================================
+   Confidence Bar
+   ============================================================ */
+.confidence-bar {
+  height: 8px;
+  background: var(--surface-container-lowest);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin: var(--space-sm) 0;
+}
+
+.confidence-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease-out;
+}
+
+.confidence-fill.high {
+  background: linear-gradient(90deg, #ff4444, #ff9a44, #10B981);
+}
+.confidence-fill.medium {
+  background: linear-gradient(90deg, #ff9a44, #fbbf24);
+}
+.confidence-fill.low {
+  background: linear-gradient(90deg, #ff6b6b, #ff4444);
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: 14px var(--space-lg);
+  border-radius: var(--radius);
+  border: none;
+  outline: none;
+  background: linear-gradient(135deg, var(--primary-container), #5b61e0);
+  color: var(--on-primary);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-main);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(128,131,255,0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(128,131,255,0.4);
+}
+
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-primary.ssq {
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-container));
+  color: var(--on-secondary);
+  box-shadow: 0 4px 14px rgba(255,179,173,0.3);
+}
+
+.btn-primary.ssq:hover {
+  box-shadow: 0 6px 18px rgba(255,179,173,0.4);
+}
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px var(--space-lg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-container);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-main);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-secondary:hover {
+  background: var(--surface-container-high);
+  color: var(--text-primary);
+}
+
+.btn-secondary:active { transform: scale(0.97); }
+
+.btn-row {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.btn-row .btn-secondary { flex: 1; }
+
+/* ============================================================
+   Bottom Tab Bar
+   ============================================================ */
+.tab-bar {
+  display: flex;
+  background: rgba(6, 14, 32, 0.9);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  transition: color 0.2s;
+  border-top: 2px solid transparent;
+  margin-top: -1px;
+  user-select: none;
+}
+
+.tab-item .material-symbols-outlined {
+  font-size: 22px;
+  transition: transform 0.2s;
+}
+
+.tab-item.active {
+  color: var(--primary);
+  border-top-color: var(--primary);
+}
+
+.tab-item.active.ssq-active {
+  color: var(--secondary);
+  border-top-color: var(--secondary);
+}
+
+.tab-item:active .material-symbols-outlined {
+  transform: scale(0.9);
+}
+
+/* ============================================================
+   Prediction Cards
+   ============================================================ */
+.pred-card {
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  border: 1px solid;
+}
+
+.pred-card.normal {
+  background: rgba(16,185,129,0.05);
+  border-color: rgba(16,185,129,0.25);
+}
+
+.pred-card.reverse {
+  background: rgba(245,158,11,0.05);
+  border-color: rgba(245,158,11,0.25);
+}
+
+.pred-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.pred-card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.pred-card-title .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.pred-card.normal .dot {
+  background: var(--success-emerald);
+  box-shadow: 0 0 6px var(--success-emerald);
+}
+.pred-card.reverse .dot {
+  background: var(--warning-amber);
+  box-shadow: 0 0 6px var(--warning-amber);
+}
+
+.pred-card-label {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+}
+
+.pred-card.normal .pred-card-label {
+  background: rgba(16,185,129,0.12);
+  color: var(--success-emerald);
+}
+
+.pred-card.reverse .pred-card-label {
+  background: rgba(245,158,11,0.12);
+  color: var(--warning-amber);
+}
+
+.pred-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.pred-meta-item {
+  background: rgba(255,255,255,0.03);
+  border-radius: var(--radius);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.pred-meta-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 1px;
+}
+
+.pred-meta-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+/* ============================================================
+   Info Box
+   ============================================================ */
+.info-box {
+  background: rgba(59,130,246,0.07);
+  border: 1px solid rgba(59,130,246,0.18);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.info-box-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ball-back-start);
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.info-box-content {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.info-box-content strong { color: var(--text-primary); }
+
+/* ============================================================
+   History Table
+   ============================================================ */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.history-table th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: left;
+  padding: var(--space-sm) var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-main);
+}
+
+.history-table td {
+  padding: 9px var(--space-xs);
+  font-size: 12px;
+  border-bottom: 1px solid rgba(51,65,85,0.4);
+  vertical-align: middle;
+}
+
+.history-table .period-col {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.history-table .sum-col {
+  text-align: right;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+/* ============================================================
+   Review Item
+   ============================================================ */
+.review-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--surface-container-high);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-sm);
+}
+
+.review-period {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  min-width: 48px;
+}
+
+.review-balls {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.review-balls .mini-ball {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: white;
+}
+
+.review-balls .mini-ball.front {
+  background: linear-gradient(135deg, var(--ball-front-start), var(--ball-front-end));
+}
+.review-balls .mini-ball.back {
+  background: linear-gradient(135deg, var(--ball-back-start), var(--ball-back-end));
+}
+
+.review-result {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.review-result.hit { background: rgba(16,185,129,0.12); color: var(--success-emerald); }
+.review-result.miss { background: rgba(239,68,68,0.12); color: var(--error); }
+
+/* ============================================================
+   Skeleton Loading
+   ============================================================ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-container) 25%,
+    var(--surface-container-high) 50%,
+    var(--surface-container) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-ball {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+/* Ball Gradients (predixa_5 style) */
+.ball-red {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.ball-blue {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.skeleton-text {
+  height: 12px;
+  border-radius: var(--radius-sm);
+  margin: 4px 0;
+}
+
+.skeleton-text.wide { width: 80%; }
+.skeleton-text.medium { width: 60%; }
+.skeleton-text.narrow { width: 35%; }
+
+/* ============================================================
+   Chart (SVG Line)
+   ============================================================ */
+.chart-container { padding: var(--space-sm) 0; }
+.chart-svg { width: 100%; height: 72px; }
+
+/* ============================================================
+   Section Title
+   ============================================================ */
+/* ============================================================
+   Home Hero (Landing Page)
+   ============================================================ */
+.home-hero {
+  text-align: center;
+  padding: 32px 16px 24px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.home-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(192,193,255,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.home-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-container-high);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 16px;
+}
+
+.home-hero-pulse {
+  width: 7px;
+  height: 7px;
+  background: var(--success-emerald);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--success-emerald);
+  animation: pulse-dot 2s infinite;
+}
+
+.home-hero-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.home-hero-accent {
+  background: linear-gradient(135deg, var(--primary), #8083ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.home-hero-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  font-family: var(--font-mono);
+}
+
+.home-hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.home-hero-actions .btn-primary { width: 100%; max-width: 260px; }
+.home-hero-actions .btn-secondary { width: 100%; max-width: 260px; }
+
+/* Section Label */
+.home-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 6px;
+  padding: 0 2px;
+}
+
+.home-section-label > span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.home-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* Quick Grid */
+.home-quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.home-quick-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.home-quick-card:hover {
+  background: var(--surface-container-high);
+  border-color: rgba(192,193,255,0.3);
+}
+
+.home-quick-card:active { transform: scale(0.98); }
+
+.home-quick-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.home-quick-text { flex: 1; min-width: 0; }
+
+.home-quick-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.home-quick-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   Section Title
+   ============================================================ */
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: var(--space-lg) 0 var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* ============================================================
+   Hero Card
+   ============================================================ */
+.hero-card {
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-lg);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(192,193,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-period {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--surface-container-low);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-md);
+  font-family: var(--font-mono);
+}
+
+.hero-balls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin: var(--space-md) 0;
+}
+
+.hero-sum {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+}
+
+.hero-sum strong {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* ============================================================
+   Settings
+   ============================================================ */
+.settings-group { margin-bottom: var(--space-sm); }
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--space-lg);
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.settings-item:first-child { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+.settings-item:last-child { border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+.settings-item:only-child { border-radius: var(--radius-lg); }
+
+.settings-label { font-size: 14px; color: var(--text-primary); }
+.settings-value { font-size: 13px; color: var(--text-muted); }
+
+/* ============================================================
+   Toggle Switch
+   ============================================================ */
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: var(--surface-container-high);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.toggle.active {
+  background: var(--success-emerald);
+  border-color: var(--success-emerald);
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.toggle.active::after { transform: translateX(20px); }
+
+/* ============================================================
+   Toast
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--surface-container-highest);
+  color: var(--text-primary);
+  padding: 9px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: all 0.25s ease;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+  border: 1px solid var(--border-subtle);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ============================================================
+   Utility
+   ============================================================ */
+.text-center { text-align: center; }
+.text-muted { color: var(--text-muted); }
+.text-sm { font-size: 12px; }
+.text-xs { font-size: 11px; }
+.font-mono { font-family: var(--font-mono); }
+.mt-2 { margin-top: var(--space-sm); }
+.mt-3 { margin-top: var(--space-md); }
+.mb-2 { margin-bottom: var(--space-sm); }
+.gap-2 { gap: var(--space-sm); }
+.gap-3 { gap: var(--space-md); }
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+
+/* Combo type buttons */
+.combo-type-btn:hover {
+  border-color: var(--primary) !important;
+  background: rgba(192,193,255,0.12) !important;
+  transform: translateY(-1px);
+}
+.combo-type-btn.active {
+  border-color: var(--primary) !important;
+  background: rgba(192,193,255,0.18) !important;
+  box-shadow: 0 0 12px rgba(192,193,255,0.25);
+}
+.combo-type-btn.active div:first-child {
+  color: var(--primary) !important;
+}
+
+/* ============================================================
+   Predict Hero
+   ============================================================ */
+.predict-hero {
+  text-align: center;
+  padding: var(--space-xl);
+  background: linear-gradient(135deg, rgba(128,131,255,0.08), rgba(128,131,255,0.03));
+  border: 1px solid rgba(128,131,255,0.2);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-lg);
+}
+
+.predict-hero.ssq-predict-hero {
+  background: linear-gradient(135deg, rgba(255,179,173,0.08), rgba(255,179,173,0.03));
+  border-color: rgba(255,179,173,0.2);
+}
+
+.predict-target {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.predict-target strong {
+  font-size: 18px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     Top Bar
+     ============================================================ -->
+<div class="top-bar">
+  <div class="logo">
+    <span class="logo-dot"></span>
+    Predixa
+  </div>
+  <select class="kind-select dlt" id="kindSelect" onchange="setKind(this.value)">
+    <option value="dlt">大乐透</option>
+    <option value="ssq">双色球</option>
+  </select>
+</div>
+
+<!-- ============================================================
+     Status Bar
+     ============================================================ -->
+<div class="status-bar">
+  <span><span class="status-dot"></span>已连接</span>
+  <span id="updateTime">--</span>
+  <span style="margin-left:auto;font-family:var(--font-mono);font-size:11px;">Hermes v4</span>
+</div>
+
+<!-- ============================================================
+     Main Content
+     ============================================================ -->
+<div class="main-content" id="mainContent">
+
+  <!-- ========== HOME TAB (predixa_1 Landing Page Design) ========== -->
+  <div class="tab-content active" id="tab-home">
+
+    <!-- ===== HERO SECTION ===== -->
+    <div class="home-hero-wrap" style="position:relative;overflow:hidden;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px 16px;text-align:center;">
+      <!-- Data grid bg -->
+      <div style="position:absolute;inset:0;background-image:linear-gradient(#334155 0.5px, transparent 0.5px), linear-gradient(90deg, #334155 0.5px, transparent 0.5px);background-size:40px 40px;opacity:0.15;pointer-events:none;"></div>
+      <!-- Radial glow -->
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%, rgba(128,131,255,0.12) 0%, transparent 70%);pointer-events:none;"></div>
+
+      <!-- Badge -->
+      <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface-container-high);border:1px solid var(--border-subtle);color:var(--primary);font-size:11px;font-family:var(--font-mono);padding:4px 10px;border-radius:999px;margin-bottom:12px;position:relative;z-index:1;">
+        <span style="width:6px;height:6px;background:var(--success-emerald);border-radius:50%;box-shadow:0 0 6px var(--success-emerald);animation:pulse-dot 2s infinite;"></span>
+        Predixa v4.2 稳定版
+      </div>
+
+      <!-- Title -->
+      <h1 style="font-size:22px;font-weight:800;color:var(--text-primary);line-height:1.2;margin-bottom:8px;position:relative;z-index:1;">
+        彩票分析的<br><span style="background:linear-gradient(135deg, var(--primary), #8083ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">未来已来</span>
+      </h1>
+      <p style="font-size:13px;color:var(--text-secondary);max-width:300px;line-height:1.5;margin-bottom:16px;position:relative;z-index:1;">由 Predixa v4 预测引擎驱动的数据深度洞察</p>
+
+      <!-- CTAs -->
+      <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:280px;position:relative;z-index:1;">
+        <button class="btn-primary" onclick="switchTab('predict')" style="width:100%;">
+          <span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span>
+          查看最新预测
+        </button>
+        <button class="btn-secondary" onclick="document.getElementById('architecture').scrollIntoView({behavior:'smooth'})" style="width:100%;">
+          <span class="material-symbols-outlined" style="font-size:16px;">memory</span>
+          运作原理
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== LIVE DASHBOARD PREVIEW ===== -->
+    <div class="glass-panel" style="border-radius:var(--radius-xl);margin:0 12px 12px;overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface-container-lowest);border-bottom:1px solid var(--border-subtle);">
+        <div style="display:flex;gap:4px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,180,171,0.4);"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:rgba(245,158,11,0.4);"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:rgba(16,185,129,0.4);"></div>
+        </div>
+        <span style="font-size:11px;font-family:var(--font-mono);color:var(--text-secondary);">prediction_matrix_active.v4</span>
+      </div>
+      <div style="padding:14px;">
+        <!-- Latest draw mini display -->
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;font-family:var(--font-mono);" id="heroPeriod2">第 -- 期</div>
+          <div style="display:flex;gap:6px;align-items:center;justify-content:center;" id="heroNumbers2">
+            <div class="ball-red" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">--</div>
+            <div class="ball-red" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">--</div>
+            <div class="ball-red" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">--</div>
+            <div class="ball-red" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">--</div>
+            <div class="ball-red" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">--</div>
+            <div style="color:var(--text-muted);font-size:14px;margin:0 2px;">+</div>
+            <div class="ball-blue" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">--</div>
+            <div class="ball-blue" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">--</div>
+          </div>
+        </div>
+        <!-- Confidence bar -->
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div style="flex:1;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:11px;color:var(--text-secondary);">模型置信度</span>
+              <span style="font-size:13px;font-family:var(--font-mono);font-weight:600;color:var(--success-emerald);" id="heroConfidence">--</span>
+            </div>
+            <div style="height:6px;background:var(--surface-container-lowest);border-radius:999px;overflow:hidden;border:1px solid var(--border-subtle);">
+              <div id="confidenceBar" style="height:100%;width:0%;background:linear-gradient(90deg, var(--success-emerald), #34d399);border-radius:999px;transition:width 1s;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 5 ENGINE CARDS (horizontal scroll) ===== -->
+    <div style="padding:4px 12px 8px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;" id="architecture">
+      <div style="display:flex;gap:8px;width:max-content;padding-bottom:4px;">
+        <!-- Card 1: 频率分析 -->
+        <div class="glass-panel" style="border-radius:var(--radius-xl);padding:14px;width:140px;flex-shrink:0;border:1px solid rgba(192,193,255,0.15);">
+          <div style="color:var(--primary);margin-bottom:10px;"><span class="material-symbols-outlined" style="font-size:24px;">analytics</span></div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">频率分析</div>
+          <div style="font-size:10px;color:var(--text-secondary);line-height:1.4;">实时波动加权跟踪冷热号码分布</div>
+          <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--border-subtle);font-size:10px;color:var(--text-muted);font-family:var(--font-mono);">模块_01</div>
+        </div>
+        <!-- Card 2: 模式识别 -->
+        <div class="glass-panel" style="border-radius:var(--radius-xl);padding:14px;width:140px;flex-shrink:0;border:1px solid rgba(192,193,255,0.15);">
+          <div style="color:var(--primary);margin-bottom:10px;"><span class="material-symbols-outlined" style="font-size:24px;">grid_view</span></div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">模式识别</div>
+          <div style="font-size:10px;color:var(--text-secondary);line-height:1.4;">多层数据集群中识别重复序列</div>
+          <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--border-subtle);font-size:10px;color:var(--text-muted);font-family:var(--font-mono);">模块_02</div>
+        </div>
+        <!-- Card 3: 统计概率 (核心) -->
+        <div class="glass-panel" style="border-radius:var(--radius-xl);padding:14px;width:150px;flex-shrink:0;border:1px solid var(--primary);box-shadow:0 0 16px rgba(192,193,255,0.15);background:rgba(192,193,255,0.05);">
+          <div style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--primary);color:var(--on-primary-fixed);font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;letter-spacing:0.5px;">核心节点</div>
+          <div style="color:var(--primary);margin-bottom:10px;margin-top:4px;"><span class="material-symbols-outlined" style="font-size:28px;font-variation-settings:'FILL' 1;">query_stats</span></div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">统计概率</div>
+          <div style="font-size:10px;color:var(--text-secondary);line-height:1.4;">标准偏差和方差偏移，确定性区间</div>
+          <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(192,193,255,0.3);font-size:10px;color:var(--primary);font-family:var(--font-mono);font-weight:600;">核心内核</div>
+        </div>
+        <!-- Card 4: 历史关联 -->
+        <div class="glass-panel" style="border-radius:var(--radius-xl);padding:14px;width:140px;flex-shrink:0;border:1px solid rgba(192,193,255,0.15);">
+          <div style="color:var(--primary);margin-bottom:10px;"><span class="material-symbols-outlined" style="font-size:24px;">history_toggle_off</span></div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">历史关联</div>
+          <div style="font-size:10px;color:var(--text-secondary);line-height:1.4;">多年周期对比，预测拐点</div>
+          <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--border-subtle);font-size:10px;color:var(--text-muted);font-family:var(--font-mono);">模块_04</div>
+        </div>
+        <!-- Card 5: 异常检测 -->
+        <div class="glass-panel" style="border-radius:var(--radius-xl);padding:14px;width:140px;flex-shrink:0;border:1px solid rgba(192,193,255,0.15);">
+          <div style="color:var(--primary);margin-bottom:10px;"><span class="material-symbols-outlined" style="font-size:24px;">filter_alt</span></div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">异常检测</div>
+          <div style="font-size:10px;color:var(--text-secondary);line-height:1.4;">过滤低概率离群值</div>
+          <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--border-subtle);font-size:10px;color:var(--text-muted);font-family:var(--font-mono);">模块_05</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BENTO ADVANTAGES ===== -->
+    <div style="padding:0 12px 8px;">
+      <!-- Row 1: Data Driven (full width) -->
+      <div class="glass-panel" style="border-radius:var(--radius-xl);padding:14px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <div style="background:rgba(192,193,255,0.15);padding:6px;border-radius:8px;color:var(--primary);">
+            <span class="material-symbols-outlined" style="font-size:16px;">data_object</span>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--text-primary);">数据驱动决策</div>
+        </div>
+        <p style="font-size:11px;color:var(--text-secondary);line-height:1.5;margin-bottom:8px;">我们的系统每小时摄取数百万个数据点，确保您的分析建立在严谨的数学事实之上。</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="font-size:10px;background:rgba(16,185,129,0.15);color:var(--success-emerald);padding:2px 8px;border-radius:999px;border:1px solid rgba(16,185,129,0.3);">✓ 10年历史数据</span>
+          <span style="font-size:10px;background:rgba(16,185,129,0.15);color:var(--success-emerald);padding:2px 8px;border-radius:999px;border:1px solid rgba(16,185,129,0.3);">✓ 神经模式映射</span>
+        </div>
+      </div>
+
+      <!-- Row 2: Two columns -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <!-- 实时透明 -->
+        <div class="glass-panel" style="border-radius:var(--radius-xl);padding:14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <div style="background:rgba(245,158,11,0.15);padding:6px;border-radius:8px;color:var(--warning-amber);">
+              <span class="material-symbols-outlined" style="font-size:16px;">visibility</span>
+            </div>
+            <div style="font-size:12px;font-weight:700;color:var(--text-primary);">全程透明</div>
+          </div>
+          <p style="font-size:10px;color:var(--text-secondary);line-height:1.4;">详细的置信度评分和战略依据，解释每个输出背后的"为什么"。</p>
+        </div>
+        <!-- 实时更新 -->
+        <div class="glass-panel" style="border-radius:var(--radius-xl);padding:14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <div style="background:rgba(16,185,129,0.15);padding:6px;border-radius:8px;color:var(--success-emerald);">
+              <span class="material-symbols-outlined" style="font-size:16px;">sync</span>
+            </div>
+            <div style="font-size:12px;font-weight:700;color:var(--text-primary);">实时更新</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <div style="display:flex;height:3px;gap:2px;">
+              <div style="width:16px;height:3px;background:var(--success-emerald);border-radius:999px;"></div>
+              <div style="width:8px;height:3px;background:rgba(16,185,129,0.5);border-radius:999px;"></div>
+              <div style="width:4px;height:3px;background:rgba(16,185,129,0.2);border-radius:999px;"></div>
+            </div>
+            <span style="font-size:10px;color:var(--success-emerald);font-family:var(--font-mono);">LIVE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BOTTOM CTA ===== -->
+    <div style="padding:4px 12px 12px;">
+      <div class="glass-panel" style="border-radius:var(--radius-xl);padding:16px;text-align:center;border:1px solid rgba(192,193,255,0.2);">
+        <div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">今天开始您的精准分析</div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:12px;">加入使用全球最先进预测引擎的专业人士</div>
+        <button class="btn-primary" onclick="switchTab('predict')" style="width:100%;">
+          <span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span>
+          一键开始预测
+        </button>
+      </div>
+    </div>
+
+    <!-- Spacer for bottom nav -->
+    <div style="height:80px;"></div>
+  </div>  <!-- ========== PREDICT TAB ========== -->
+  <div class="tab-content" id="tab-predict">
+    <div class="predict-hero" id="predictHero">
+      <div class="predict-target">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.5px;">目标期号</div>
+        <strong id="predictPeriod">--</strong>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;font-family:var(--font-mono);" id="predictTime"></div>
+    </div>
+
+    <div id="predictContent">
+      <!-- Combo Picker -->
+      <div class="glass-card" style="padding:14px 16px;margin-bottom:10px;">
+        <!-- Front zone label + counter -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <span style="font-size:12px;color:var(--ball-front-start);font-weight:600;">前区 【自选 6 ~ 35 个】</span>
+          <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);" id="frontCount">0 / 35</span>
+        </div>
+        <!-- Front number buttons -->
+        <div id="frontPicker" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;">
+          <!-- JS will populate 01-35 -->
+        </div>
+        <!-- Back zone label + counter -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <span style="font-size:12px;color:var(--ball-back-start);font-weight:600;">后区 【需选 2 ~ 4 个】</span>
+          <span style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);" id="backCount">0 / 12</span>
+        </div>
+        <!-- Back number buttons -->
+        <div id="backPicker" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
+          <!-- JS will populate 01-12 -->
+        </div>
+        <!-- Summary row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding:8px 10px;background:rgba(192,193,255,0.06);border-radius:8px;border:1px solid rgba(192,193,255,0.12);">
+          <div style="font-size:12px;color:var(--text-secondary);">
+            <span id="selSummary">请先选号码</span>
+          </div>
+          <div style="font-size:11px;font-family:var(--font-mono);">
+            <span id="comboInfo" style="color:var(--text-muted);"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generate button -->
+      <button class="btn-primary" id="genBtn" onclick="doAIPool()" style="margin-bottom:10px;outline:none;">
+        <span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span>
+        <span id="genBtnText">AI预测</span>
+      </button>
+
+      <!-- Skeleton placeholder -->
+      <div id="predSkeleton" class="skeleton" style="padding:16px;margin-bottom:12px;display:none;">
+        <div class="skeleton-text narrow" style="margin-bottom:12px;height:12px;"></div>
+        <div style="display:flex;justify-content:center;gap:6px;margin:12px 0;">
+          <div class="skeleton-ball"></div><div class="skeleton-ball"></div>
+          <div class="skeleton-ball"></div><div class="skeleton-ball"></div>
+          <div class="skeleton-ball"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box-title">
+        <span class="material-symbols-outlined" style="font-size:14px;">info</span>
+        复式说明
+      </div>
+      <div class="info-box-content">
+        <strong>自由复式:</strong> 前区选 5~12 个，后区选 2~4 个<br>
+        系统自动展开所有组合注数并计算金额<br>
+        Hermes v4 · 五引擎融合 · 训练样本: 近30期
+      </div>
+    </div>
+
+    <div class="btn-row mt-3">
+      <button class="btn-secondary" style="flex:1;" onclick="quickCombo(6,2)">
+        <span class="material-symbols-outlined" style="font-size:16px;">6+2</span>
+        快捷6+2
+      </button>
+      <button class="btn-secondary" style="flex:1;" onclick="quickCombo(7,2)">
+        <span class="material-symbols-outlined" style="font-size:16px;">7+2</span>
+        快捷7+2
+      </button>
+      <button class="btn-secondary" style="flex:1;" onclick="switchTab('home')">
+        <span class="material-symbols-outlined" style="font-size:16px;">home</span>
+        返回
+      </button>
+    </div>
+
+    <div class="section-title">近期结果</div>
+    <div id="reviewHistory"></div>
+  </div>
+
+  <!-- ========== TREND TAB ========== -->
+  <div class="tab-content" id="tab-trend">
+    <div class="glass-card" style="padding:var(--space-lg);margin-bottom:var(--space-md);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">和值走势</div>
+        <div style="font-size:11px;color:var(--text-muted);" id="sumChartLabel">--</div>
+      </div>
+      <div class="chart-container" id="sumChart"></div>
+      <div class="zone-legend" style="margin-top:6px;">
+        <span>均值: <strong id="sumAvg" style="color:var(--primary);font-family:var(--font-mono);">--</strong></span>
+        <span>当前: <strong id="sumCurrent" style="color:var(--text-primary);font-family:var(--font-mono);">--</strong></span>
+      </div>
+    </div>
+
+    <div class="glass-card" style="padding:var(--space-lg);margin-bottom:var(--space-md);">
+      <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">完整区间分布</div>
+      <div id="zoneFullBar"></div>
+      <div class="zone-legend" id="zoneFullLegend" style="margin-top:6px;"></div>
+    </div>
+
+    <div class="glass-card" style="padding:var(--space-lg);margin-bottom:var(--space-md);">
+      <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">前区冷热 TOP10</div>
+      <div id="frontHotList" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
+    </div>
+
+    <div class="glass-card" style="padding:var(--space-lg);margin-bottom:var(--space-md);">
+      <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">后区冷热</div>
+      <div id="backHotList" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" style="flex:1;" onclick="switchTab('predict')">
+        <span class="material-symbols-outlined" style="font-size:16px;">auto_awesome</span>
+        生成预测
+      </button>
+      <button class="btn-secondary" style="flex:1;" onclick="switchTab('history')">
+        <span class="material-symbols-outlined" style="font-size:16px;">history</span>
+        历史记录
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== HISTORY TAB ========== -->
+  <div class="tab-content" id="tab-history">
+    <div class="glass-card" style="padding:var(--space-lg);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">开奖历史</div>
+        <div style="font-size:11px;color:var(--text-muted);" id="historyCount">--期</div>
+      </div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>期号</th>
+              <th>前区</th>
+              <th>后区</th>
+              <th style="text-align:right;">和值</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="btn-row mt-3">
+      <button class="btn-secondary" style="flex:1;" onclick="switchTab('predict')">
+        <span class="material-symbols-outlined" style="font-size:16px;">auto_awesome</span>
+        生成预测
+      </button>
+      <button class="btn-secondary" style="flex:1;" onclick="switchTab('trend')">
+        <span class="material-symbols-outlined" style="font-size:16px;">show_chart</span>
+        趋势分析
+      </button>
+    </div>
+  </div>
+
+  <!-- ========== SETTINGS TAB ========== -->
+  <div class="tab-content" id="tab-settings">
+    <div class="settings-group">
+      <div class="settings-item" style="border-radius:var(--radius-lg) var(--radius-lg) 0 0;">
+        <span class="settings-label">默认彩种</span>
+        <span class="settings-value" id="settingsKind">大乐透</span>
+      </div>
+      <div class="settings-item">
+        <span class="settings-label">深色主题</span>
+        <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+      </div>
+      <div class="settings-item" style="border-radius:0 0 var(--radius-lg) var(--radius-lg);">
+        <span class="settings-label">前端版本</span>
+        <span class="settings-value">Design v2.1</span>
+      </div>
+    </div>
+
+    <div class="settings-group mt-3">
+      <div class="settings-item" style="border-radius:var(--radius-lg) var(--radius-lg) 0 0;cursor:pointer;" onclick="updateData()">
+        <span class="settings-label">更新数据</span>
+        <span class="settings-value" style="color:var(--primary);">点击更新 →</span>
+      </div>
+      <div class="settings-item">
+        <span class="settings-label">大乐透期数</span>
+        <span class="settings-value font-mono" id="settingsDltCount">--</span>
+      </div>
+      <div class="settings-item">
+        <span class="settings-label">双色球期数</span>
+        <span class="settings-value font-mono" id="settingsSsqCount">--</span>
+      </div>
+      <div class="settings-item" style="border-radius:0 0 var(--radius-lg) var(--radius-lg);">
+        <span class="settings-label">最新大乐透</span>
+        <span class="settings-value font-mono" id="settingsDltLatest">--</span>
+      </div>
+    </div>
+
+    <div class="settings-group mt-3">
+      <div class="settings-item" style="border-radius:var(--radius-lg) var(--radius-lg) 0 0;">
+        <span class="settings-label">当前模型</span>
+        <span class="settings-value">Hermes v4</span>
+      </div>
+      <div class="settings-item">
+        <span class="settings-label">预测引擎</span>
+        <span class="settings-value">5 Engine Fusion</span>
+      </div>
+      <div class="settings-item" style="border-radius:0 0 var(--radius-lg) var(--radius-lg);">
+        <span class="settings-label">数据来源</span>
+        <span class="settings-value">500彩票网</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     Toast
+     ============================================================ -->
+<div class="toast" id="toast"></div>
+
+<!-- ============================================================
+     Bottom Tab Bar
+     ============================================================ -->
+<div class="tab-bar">
+  <div class="tab-item active" onclick="switchTab('home')" id="tabBtn-home">
+    <span class="material-symbols-outlined">home</span>
+    <span>首页</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('predict')" id="tabBtn-predict">
+    <span class="material-symbols-outlined">auto_awesome</span>
+    <span>预测</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('history')" id="tabBtn-history">
+    <span class="material-symbols-outlined">history</span>
+    <span>历史</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('settings')" id="tabBtn-settings">
+    <span class="material-symbols-outlined">settings</span>
+    <span>设置</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   State
+   ============================================================ */
+const API = 'http://localhost:5123/api';
+let currentKind = 'dlt';
+let currentTab = 'home';
+let selectedComboType = null; // {fc, bc} set when user picks a combo type
+let aiPoolGenerated = false; // true after AI fills picker with recommendations
+
+/* ============================================================
+   API Helper
+   ============================================================ */
+async function api(endpoint) {
+  try {
+    // Only append kind= if the endpoint doesn't already contain a kind= parameter
+    const sep = endpoint.includes('?') ? '&' : '?';
+    const hasKind = /[?&]kind=/.test(endpoint);
+    const kindParam = hasKind ? '' : `kind=${currentKind}`;
+    const url = kindParam ? `${API}/${endpoint}${sep}${kindParam}` : `${API}/${endpoint}`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(15000) });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } catch(e) {
+    return { error: true, message: '服务未连接，请检查服务器是否启动' };
+  }
+}
+
+/* ============================================================
+   Toast
+   ============================================================ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ============================================================
+   Kind Switch
+   ============================================================ */
+function setKind(kind) {
+  currentKind = kind;
+  const sel = document.getElementById('kindSelect');
+  sel.className = `kind-select ${kind}`;
+  const cta = document.getElementById('ctaBtn');
+  if (cta) cta.className = `btn-primary ${kind === 'ssq' ? 'ssq' : ''}`;
+  document.getElementById('predictHero').className = `predict-hero${kind === 'ssq' ? ' ssq-predict-hero' : ''}`;
+  document.getElementById('settingsKind').textContent = kind === 'dlt' ? '大乐透' : '双色球';
+  refreshAll();
+}
+
+/* ============================================================
+   Tab Switch
+   ============================================================ */
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  document.querySelectorAll('.tab-item').forEach(el => {
+    el.classList.remove('active', 'ssq-active');
+    if (el.id === `tabBtn-${tab}`) {
+      el.classList.add('active');
+      if (currentKind === 'ssq') el.classList.add('ssq-active');
+    }
+  });
+
+  if (tab === 'home') renderHome();
+  else if (tab === 'predict') {
+    const fp = document.getElementById('frontPicker');
+    if (!fp || fp.children.length === 0) initPicker();
+    doAIPool();
+  } else if (tab === 'trend') renderTrend();
+  else if (tab === 'history') renderHistory();
+  else if (tab === 'settings') loadSettings();
+}
+
+/* ============================================================
+   Render: Home
+   ============================================================ */
+async function renderHome() {
+  document.getElementById('updateTime').textContent = '加载中...';
+
+  let latest = null;
+  let trend = null;
+  try {
+    [latest, trend] = await Promise.all([api('latest'), api('trend')]);
+  } catch(e) {
+    document.getElementById('updateTime').textContent = '连接失败';
+    return;
+  }
+
+  if (latest && !latest.error) {
+    document.getElementById('updateTime').textContent = '更新于 ' + (latest.fetched_at || '--');
+    document.getElementById('heroPeriod2').textContent = '第 ' + latest.period + ' 期';
+    const nums2 = document.getElementById('heroNumbers2');
+    const front = latest.front.map(n =>
+      '<div class="ball-red" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">' + String(n).padStart(2,'0') + '</div>'
+    ).join('');
+    const back = latest.back.map(n =>
+      '<div class="ball-blue" style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:600;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.4);">' + String(n).padStart(2,'0') + '</div>'
+    ).join('');
+    nums2.innerHTML = front + '<div style="color:var(--text-muted);font-size:14px;margin:0 2px;">+</div>' + back;
+  }
+
+  if (trend && !trend.error) {
+    const conf = trend.confidence || 85;
+    const confEl = document.getElementById('heroConfidence');
+    if (confEl) confEl.textContent = conf + '%';
+    setTimeout(() => {
+      const bar = document.getElementById('confidenceBar');
+      if (bar) bar.style.width = conf + '%';
+    }, 300);
+  }
+}
+/* ============================================================
+   Render: Predict
+   ============================================================ */
+/* ============================================================
+   Number Picker
+   ============================================================ */
+let selectedFront = new Set();
+let selectedBack = new Set();
+
+function initPicker() {
+  selectedFront.clear();
+  selectedBack.clear();
+  aiPoolGenerated = false;
+  const fp = document.getElementById('frontPicker');
+  const bp = document.getElementById('backPicker');
+  if (!fp || !bp) return;
+  fp.innerHTML = '';
+  bp.innerHTML = '';
+
+  // Front zone: 01-35
+  for (let i = 1; i <= 35; i++) {
+    const n = String(i).padStart(2, '0');
+    const btn = document.createElement('button');
+    btn.className = 'num-btn';
+    btn.id = 'f-' + n;
+    btn.textContent = n;
+    btn.style.cssText = (
+      'width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(239,68,68,0.3);' +
+      'background:rgba(239,68,68,0.06);color:#ef4444;font-family:var(--font-mono);' +
+      'font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;flex-shrink:0;'
+    );
+    btn.onclick = () => toggleNum('front', i);
+    fp.appendChild(btn);
+  }
+
+  // Back zone: 01-12
+  for (let i = 1; i <= 12; i++) {
+    const n = String(i).padStart(2, '0');
+    const btn = document.createElement('button');
+    btn.className = 'num-btn-back';
+    btn.id = 'b-' + n;
+    btn.textContent = n;
+    btn.style.cssText = (
+      'width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(59,130,246,0.3);' +
+      'background:rgba(59,130,246,0.06);color:#3b82f6;font-family:var(--font-mono);' +
+      'font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;flex-shrink:0;'
+    );
+    btn.onclick = () => toggleNum('back', i);
+    bp.appendChild(btn);
+  }
+}
+
+function toggleNum(zone, num) {
+  const set = zone === 'front' ? selectedFront : selectedBack;
+  if (set.has(num)) {
+    set.delete(num);
+  } else {
+    // No hard cap — front max 35, back max 12 (full range)
+    set.add(num);
+  }
+  renderPickerState();
+  updateSummary();
+}
+
+function renderPickerState() {
+  // Front
+  for (let i = 1; i <= 35; i++) {
+    const btn = document.getElementById('f-' + String(i).padStart(2,'0'));
+    if (!btn) continue;
+    if (selectedFront.has(i)) {
+      btn.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
+      btn.style.color = 'white';
+      btn.style.borderColor = '#EF4444';
+      btn.style.boxShadow = '0 2px 8px rgba(239,68,68,0.4)';
+      btn.style.transform = 'scale(1.1)';
+    } else {
+      btn.style.background = 'rgba(239,68,68,0.06)';
+      btn.style.color = '#ef4444';
+      btn.style.borderColor = 'rgba(239,68,68,0.3)';
+      btn.style.boxShadow = 'none';
+      btn.style.transform = 'scale(1)';
+    }
+  }
+  // Back
+  for (let i = 1; i <= 12; i++) {
+    const btn = document.getElementById('b-' + String(i).padStart(2,'0'));
+    if (!btn) continue;
+    if (selectedBack.has(i)) {
+      btn.style.background = 'linear-gradient(135deg, #3B82F6, #2563EB)';
+      btn.style.color = 'white';
+      btn.style.borderColor = '#3B82F6';
+      btn.style.boxShadow = '0 2px 8px rgba(59,130,246,0.4)';
+      btn.style.transform = 'scale(1.1)';
+    } else {
+      btn.style.background = 'rgba(59,130,246,0.06)';
+      btn.style.color = '#3b82f6';
+      btn.style.borderColor = 'rgba(59,130,246,0.3)';
+      btn.style.boxShadow = 'none';
+      btn.style.transform = 'scale(1)';
+    }
+  }
+}
+
+function updateSummary() {
+  const fc = selectedFront.size;
+  const bc = selectedBack.size;
+  const summary = document.getElementById('selSummary');
+  const comboInfo = document.getElementById('comboInfo');
+  const genBtn = document.getElementById('genBtn');
+  const genBtnText = document.getElementById('genBtnText');
+
+  if (fc < 6 || bc < 2) {
+    summary.textContent = '前区 ' + fc + '/6 · 后区 ' + bc + '/2  （需达最低要求）';
+    comboInfo.textContent = '';
+    genBtn && (genBtn.disabled = true);
+    genBtn && (genBtn.style.opacity = '0.5');
+  } else {
+    // C(fc,5) * C(bc,2)
+    const combos = Math.round(comboCalc(fc, 5) * comboCalc(bc, 2));
+    const cost = combos * 2;
+    summary.textContent = '已选 ' + fc + '前区 + ' + bc + '后区';
+    comboInfo.innerHTML = '<span style="color:var(--primary);font-weight:600;">' + combos + '注</span> × 2元 = <span style="color:var(--warning-amber);font-weight:600;">' + cost + '元</span>';
+    genBtn && (genBtn.disabled = false);
+    genBtn && (genBtn.style.opacity = '1');
+  }
+}
+
+function comboCalc(n, r) {
+  if (r > n) return 0;
+  let c = 1;
+  for (let i = 0; i < r; i++) c = c * (n - i) / (i + 1);
+  return Math.round(c);
+}
+
+/* ============================================================
+   AI Pool + Expand — the single entry point for the predict button
+   ============================================================ */
+async function doAIPool() {
+  const content = document.getElementById('predictContent');
+  const fc = selectedFront.size;
+  const bc = selectedBack.size;
+
+  // Case 1: user has 6+ front and 2+ back — expand their selection
+  if (fc >= 6 && bc >= 2) {
+    const frontNums = Array.from(selectedFront).join(',');
+    const backNums = Array.from(selectedBack).join(',');
+    // Pass front/back WITHOUT fc/bc so API expands exactly the user's pool
+    const data = await api('predict_ai?kind=' + currentKind + '&front=' + frontNums + '&back=' + backNums);
+    if (data.error || !data.prediction) {
+      showToast('服务器未连接，请检查');
+      return;
+    }
+    document.getElementById('predictPeriod').textContent = '\u7B2C ' + (data.for_period || '--') + ' \u671F';
+    document.getElementById('predictTime').textContent = data.generated_at || '';
+    renderPredCardAI(data, content, fc, bc);
+    loadReviewHistory();
+    return;
+  }
+
+  // Case 2: user has some numbers but not enough — hint
+  if (fc > 0 || bc > 0) {
+    const hint = `<div class="pick-hint" style="text-align:center;padding:16px;margin:8px 0 4px;"><div style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:rgba(192,193,255,0.08);border-radius:12px;border:1px solid rgba(192,193,255,0.2);"><span style="font-size:18px;">&#x1F3AF;</span><span style="font-size:13px;color:var(--text-secondary);">前区 <span style="color:var(--primary);font-weight:700;">${fc}/6</span> · 后区 <span style="color:var(--primary);font-weight:700;">${bc}/2</span>&nbsp;<span style="color:var(--text-muted);font-size:12px;">请再选 ${6 - fc > 0 ? (6 - fc) + '个前区' : ''}${6 - fc > 0 && bc < 2 ? '和' : ''}${bc < 2 ? (2 - bc) + '个后区' : ''}，或直接点此按钮获取AI推荐</span></span></div></div>`;
+    const existingHint = content.querySelector('.pick-hint');
+    if (existingHint) existingHint.remove();
+    content.insertAdjacentHTML('beforeend', hint);
+  }
+
+  // Case 3: picker empty or hint dismissed — call AI for fresh recommendation (default 6+2)
+  aiPoolGenerated = true;
+  showToast('AI推荐号码中...');
+  const data = await api('predict_ai?kind=' + currentKind + '&fc=6&bc=2');
+  if (data.error || !data.prediction) {
+    showToast('服务器未连接，请检查');
+    aiPoolGenerated = false;
+    return;
+  }
+  // Fill picker with AI's recommended pool
+  selectedFront = new Set((data.combo.front_pool || data.prediction.front || []).map(n => parseInt(n)));
+  selectedBack  = new Set((data.combo.back_pool  || data.prediction.back  || []).map(n => parseInt(n)));
+  renderPickerState();
+  updateSummary();
+  document.getElementById('predictPeriod').textContent = '\u7B2C ' + (data.for_period || '--') + ' \u671F';
+  document.getElementById('predictTime').textContent = data.generated_at || '';
+  renderPredCardAI(data, content, selectedFront.size, selectedBack.size);
+  loadReviewHistory();
+}
+
+/* Expand only — called after user has a pool in picker */
+async function doPredict() {
+  const content = document.getElementById('predictContent');
+  const fc = selectedFront.size;
+  const bc = selectedBack.size;
+  if (fc < 6 || bc < 2) {
+    showToast('前区至少选6个、后区至少选2个');
+    return;
+  }
+  const frontNums = Array.from(selectedFront).join(',');
+  const backNums  = Array.from(selectedBack).join(',');
+  const data = await api('predict_ai?kind=' + currentKind + '&front=' + frontNums + '&back=' + backNums);
+  if (data.error || !data.prediction) {
+    showToast('服务器未连接，请检查');
+    return;
+  }
+  document.getElementById('predictPeriod').textContent = '\u7B2C ' + (data.for_period || '--') + ' \u671F';
+  document.getElementById('predictTime').textContent = data.generated_at || '';
+  renderPredCardAI(data, content, fc, bc);
+  loadReviewHistory();
+}
+
+
+/* ============================================================
+   Render: AI Prediction Card (Hermes v4)
+   ============================================================ */
+async function renderPredCardAI(data, content, fc, bc) {
+  // Remove skeleton
+  const skel = content.querySelector('.skeleton');
+  if (skel) skel.remove();
+  const pred = data.prediction;
+  const rev = data.reverse;
+  const analysis = data.analysis;
+  const combo = data.combo;
+  const ranked = (data.ranked_front && data.ranked_front.length > 0) ? data.ranked_front : (data.analysis && data.analysis.ranked_front) || [];
+  const ranked_b = data.ranked_back || [];
+
+  // Build hot/cold HTML
+  const hotF = (analysis.hot_front || []).slice(0,6).map(n => `<span class="tag front">${n}</span>`).join('');
+  const coldF = (analysis.cold_front || []).slice(0,6).map(n => `<span class="tag" style="background:rgba(100,100,100,0.3);color:var(--text-secondary);">${n}</span>`).join('');
+  const hotB = (analysis.hot_back || []).slice(0,4).map(n => `<span class="tag back">${n}</span>`).join('');
+  const coldB = (analysis.cold_back || []).slice(0,4).map(n => `<span class="tag" style="background:rgba(100,100,100,0.3);color:var(--text-secondary);">${n}</span>`).join('');
+
+  // Trend tag
+  const trendTag = analysis.trend ? `<span style="font-size:11px;color:var(--primary);background:rgba(192,193,255,0.1);padding:2px 8px;border-radius:10px;">\u2714 ${analysis.trend}</span>` : '';
+
+  // Sum range badge
+  const sumRange = analysis.sum_range ? `<span style="font-size:11px;padding:2px 8px;background:rgba(255,179,173,0.1);color:#ffb3ad;border-radius:10px;">\u548C\u503C ${analysis.sum_range}</span>` : '';
+
+  // Normal prediction card — show AI recommended numbers
+  const normalBalls = (pred.front||[]).map(n => `<div class="ball front size-md">${n}</div>`).join('');
+  const normalBackBalls = (pred.back||[]).map(n => `<div class="ball back size-md">${n}</div>`).join('');
+  // User's selected pool (for combo display)
+  const userFront = data.user_front || [];
+  const userBack = data.user_back || [];
+  const userFrontSet = new Set(userFront);
+  const userBackSet = new Set(userBack);
+  // Mark user's numbers in confidence bars
+  const rankedHTML = ranked.slice(0, 10).map(n => {
+    const pct = Math.round((n.confidence || 0.5) * 100);
+    const cls = pct >= 75 ? 'high' : pct >= 60 ? 'medium' : 'low';
+    const isUser = userFrontSet.has(n.num);
+    const userTag = isUser ? ' <span style="background:var(--primary);color:#000;font-size:9px;padding:1px 4px;border-radius:4px;">&#x2714;</span>' : '';
+    const numClass = pct >= 75 ? 'ball front size-sm' : 'ball size-sm';
+    const numStyle = pct >= 75 ? '' : 'background:rgba(255,255,255,0.08);color:var(--text-muted);';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:3px 0;">
+      <div class="${numClass}" ${numStyle ? 'style="' + numStyle + '"' : ''}>${String(n.num).padStart(2,"0")}</div>
+      <div style="flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;">
+        <div style="width:${pct}%;height:100%;border-radius:2px;${isUser ? 'background:var(--primary);' : ''}" class="${cls}"></div>
+      </div>
+      <span style="font-size:10px;color:var(--text-muted);width:28px;text-align:right;">${pct}%${userTag}</span>
+    </div>`;
+  }).join('');
+  const normalHTML = `
+    <div class="pred-card normal">
+      <div class="pred-card-header">
+        <div class="pred-card-title"><div class="dot"></div>\u6B63\u9009 (\u71B1\u53F7\u7B56\u7565)</div>
+        <span class="pred-card-label">\u7B5B\u4FE1\u5EA6 82%</span>
+      </div>
+      <div class="confidence-bar"><div class="confidence-fill high" style="width:82%"></div></div>
+      <div class="balls-row" style="margin:14px 0;">
+        ${normalBalls}
+        <div class="ball sep" style="width:16px;">+</div>
+        ${normalBackBalls}
+      </div>
+      <div class="pred-meta" style="flex-wrap:wrap;gap:4px;">
+        ${trendTag} ${sumRange}
+      </div>
+      <div style="font-size:11px;color:var(--text-secondary);margin:8px 0;padding:8px;background:rgba(192,193,255,0.05);border-radius:8px;">
+        <span style="color:var(--primary);font-weight:600;">\u5206\u6790:</span> ${pred.reason || '\u71B1\u53F7\u5EF6\u7EED\uFF0C\u51B7\u53F7\u56DE\u8865'}</div>
+      <div class="btn-row">
+        <button class="btn-secondary" style="flex:1;" onclick="copyAIPred('normal')">
+          <span class="material-symbols-outlined" style="font-size:15px;">content_copy</span> \u590D\u5236
+        </button>
+        <button class="btn-secondary" style="flex:1;" onclick="saveFavAI('normal', data)">
+          <span class="material-symbols-outlined" style="font-size:15px;">favorite</span> \u6536\u85CF
+        </button>
+      </div>
+    </div>`;
+
+  // Reverse prediction card
+  const revBalls = (rev.front||[]).map(n => `<div class="ball" style="background:rgba(100,100,100,0.3);color:var(--text-secondary);font-size:18px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;">${n}</div>`).join('');
+  const revBackBalls = (rev.back||[]).map(n => `<div class="ball back size-md">${n}</div>`).join('');
+  const reverseHTML = `
+    <div class="pred-card reverse">
+      <div class="pred-card-header">
+        <div class="pred-card-title"><div class="dot" style="background:var(--warning)"></div>\u53CD\u9009 (\u51B7\u53F7\u7B56\u7565)</div>
+        <span class="pred-card-label">\u7B5B\u4FE1\u5EA6 61%</span>
+      </div>
+      <div class="confidence-bar"><div class="confidence-fill medium" style="width:61%"></div></div>
+      <div class="balls-row" style="margin:14px 0;">
+        ${revBalls}
+        <div class="ball sep" style="width:16px;">+</div>
+        ${revBackBalls}
+      </div>
+      <div style="font-size:11px;color:var(--text-secondary);margin:8px 0;padding:8px;background:rgba(255,179,173,0.05);border-radius:8px;">
+        <span style="color:#ffb3ad;font-weight:600;">\u5206\u6790:</span> ${rev.reason || '\u51B7\u53F7\u53CD\u5E38\uFF0C\u907F\u5F00\u70ED\u53F7'}</div>
+      <div class="btn-row">
+        <button class="btn-secondary" style="flex:1;" onclick="copyAIPred('reverse')">
+          <span class="material-symbols-outlined" style="font-size:15px;">content_copy</span> \u590D\u5236
+        </button>
+        <button class="btn-secondary" style="flex:1;" onclick="saveFavAI('reverse', data)">
+          <span class="material-symbols-outlined" style="font-size:15px;">favorite</span> \u6536\u85CF
+        </button>
+      </div>
+    </div>`;
+
+  // Hot/cold analysis card
+  const analysisHTML = `
+    <div class="glass-card" style="margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:10px;color:var(--text-secondary);">\u2705 \u70ED\u51B7\u5206\u6790</div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:11px;color:var(--primary);margin-bottom:4px;">\u524D\u533A \u70ED\u53F7: ${hotF}</div>
+        <div style="font-size:11px;color:var(--text-muted);">\u524D\u533A \u51B7\u53F7: ${coldF}</div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:11px;color:#ffb3ad;margin-bottom:4px;">\u540E\u533A \u70ED\u53F7: ${hotB}</div>
+        <div style="font-size:11px;color:var(--text-muted);">\u540E\u533A \u51B7\u53F7: ${coldB}</div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">\u524D\u533A\u4F53\u8BCA\u503C (Top 10)</div>
+        ${rankedHTML}
+      </div>
+      ${combo && combo.count > 1 ? `<div style="margin-top:10px;padding:10px;background:rgba(192,193,255,0.08);border-radius:8px;">
+        <div style="font-size:11px;color:var(--primary);margin-bottom:4px;">\u590D\u5F0F\u6295\u6CE8 (${combo.type})</div>
+        <div style="font-size:11px;color:var(--text-secondary);">\u5171 <strong style="color:var(--text-primary)">${combo.count}</strong> \u6CE8\uFF0C\u9884\u8BA1 <strong style="color:var(--warning)">${combo.cost}\u5143</strong></div>
+        <div style="font-size:10px;margin-top:6px;">\u524D\u533A\u5019\u9009 <span style="color:var(--primary);">(${userFront.length}\u4E2A)</span>: ${userFront.length > 0 ? userFront.map(n => { const isHot = (analysis.hot_front||[]).includes(n); return `<span class="${isHot ? 'tag front' : 'tag'}" style="margin:2px;">${n}</span>`; }).join('') : '<span style="color:var(--text-muted);">--</span>'}</div>
+        <div style="font-size:10px;margin-top:4px;">\u540E\u533A\u5019\u9009 <span style="color:var(--primary);">(${userBack.length}\u4E2A)</span>: ${userBack.length > 0 ? userBack.map(n => { const isHot = (analysis.hot_back||[]).includes(n); return `<span class="${isHot ? 'tag back' : 'tag'}" style="margin:2px;">${n}</span>`; }).join('') : '<span style="color:var(--text-muted);">--</span>'}</div>
+      </div>` : ''}
+    </div>`;
+
+  lastAIData = data;
+  content.innerHTML = normalHTML + reverseHTML + analysisHTML;
+}
+/* ============================================================
+   AI Copy & Save (for Hermes AI predictions)
+   ============================================================ */
+let lastAIData = null;
+
+async function copyAIPred(type) {
+  if (!lastAIData) {
+    showToast('\u6CA1\u6709\u53EF\u590D\u5236\u7684\u9884\u6D4B\u6570\u636E');
+    return;
+  }
+  const src = type === 'normal' ? lastAIData.prediction : lastAIData.reverse;
+  const front = (src.front || []).join(' ');
+  const back = (src.back || []).join(' ');
+  const text = '\u524D\u533A: ' + front + '  \u540E\u533A: ' + back;
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('\u5DF2\u590D\u5236\u5230\u526A\u8D34\u677F');
+  } catch(e) { showToast('\u590D\u5236\u5931\u8D25'); }
+}
+
+async function saveFavAI(type, data) {
+  lastAIData = data;
+  const src = type === 'normal' ? data.prediction : data.reverse;
+  try {
+    const favs = JSON.parse(localStorage.getItem('lottery_favs') || '[]');
+    favs.unshift({
+      kind: currentKind,
+      type: 'AI-' + type,
+      front: (src.front || []).join(','),
+      back: (src.back || []).join(','),
+      period: data.for_period,
+      model: 'Hermes AI',
+      time: new Date().toISOString()
+    });
+    localStorage.setItem('lottery_favs', JSON.stringify(favs.slice(0, 50)));
+    showToast('\u5DF2\u6536\u85CF');
+  } catch(e) { showToast('\u6536\u85CF\u5931\u8D25'); }
+}
+
+/* ============================================================
+   Render: Trend
+   ============================================================ */
+async function renderTrend() {
+  const [trend, history] = await Promise.all([api('trend'), api('history?limit=20')]);
+
+  if (trend.error) return;
+
+  if (history && Array.isArray(history) && history.length > 0) {
+    const sums = history.slice(-15).map(d => d.sum).reverse();
+    const min = Math.min(...sums) - 5;
+    const max = Math.max(...sums) + 5;
+    const range = max - min || 1;
+    const w = 280, h = 72, pad = 5;
+    const stepX = (w - pad*2) / Math.max(sums.length - 1, 1);
+
+    const points = sums.map((s, i) => {
+      const x = pad + i * stepX;
+      const y = pad + (1 - (s - min) / range) * (h - pad*2);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    });
+
+    const polyline = points.join(' ');
+    const lastPt = points[points.length - 1].split(',');
+    const avgVal = (sums.reduce((a,b) => a+b, 0) / sums.length).toFixed(0);
+
+    document.getElementById('sumChart').innerHTML = `
+      <svg class="chart-svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="var(--primary)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <polyline points="${polyline}" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="${lastPt[0]}" cy="${lastPt[1]}" r="3" fill="var(--primary)"/>
+      </svg>`;
+    document.getElementById('sumAvg').textContent = avgVal;
+    document.getElementById('sumCurrent').textContent = sums[sums.length - 1];
+    document.getElementById('sumChartLabel').textContent = `${sums.length}期`;
+  }
+
+  if (trend.zone_dist) {
+    const zoneColors = currentKind === 'dlt'
+      ? ['#EF4444','#F97316','#EAB308','#22C55E','#3B82F6']
+      : ['#EF4444','#F97316','#EAB308','#22C55E','#6366F1'];
+    const zLabels = currentKind === 'dlt' ? ['S','M1','M2','M3','L'] : ['Z1','Z2','Z3','Z4','L'];
+    const zData = trend.zone_dist;
+    const total = Object.values(zData).reduce((a,b) => a+b, 0) || 1;
+
+    document.getElementById('zoneFullBar').innerHTML = `<div class="zone-bar">${zLabels.map((l,i) => {
+      const v = zData[l] || 0;
+      const pct = (v/total*100).toFixed(0);
+      return `<div class="zone-seg" style="flex:${pct};background:${zoneColors[i]};">${v}</div>`;
+    }).join('')}</div>`;
+    document.getElementById('zoneFullLegend').innerHTML = zLabels.map((l,i) =>
+      `<span><strong style="color:${zoneColors[i]}">${l}</strong>:${zData[l]||0}</span>`
+    ).join('');
+  }
+
+  if (trend.hot_front) {
+    document.getElementById('frontHotList').innerHTML = (trend.hot_front.slice(0,10) || []).map(([n,f]) =>
+      `<span class="tag front">${n} <small style="opacity:0.6">${(f*100).toFixed(0)}%</small></span>`
+    ).join('');
+  }
+
+  if (trend.hot_back) {
+    document.getElementById('backHotList').innerHTML = (trend.hot_back || []).map(([n,f]) =>
+      `<span class="tag back">${n} <small style="opacity:0.6">${(f*100).toFixed(0)}%</small></span>`
+    ).join('');
+  }
+}
+
+/* ============================================================
+   Render: History
+   ============================================================ */
+async function renderHistory() {
+  const history = await api('history?limit=30');
+
+  if (!history || !Array.isArray(history)) {
+    document.getElementById('historyBody').innerHTML =
+      '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px;">无数据</td></tr>';
+    return;
+  }
+
+  document.getElementById('historyCount').textContent = `${history.length}期`;
+
+  document.getElementById('historyBody').innerHTML = history.slice().reverse().slice(0,20).map(d => `
+    <tr>
+      <td class="period-col">${d.period}</td>
+      <td>${(d.front||[]).map(n => `<span class="tag front" style="padding:2px 5px;font-size:10px;">${n}</span>`).join('')}</td>
+      <td>${(d.back||[]).map(n => `<span class="tag back" style="padding:2px 5px;font-size:10px;">${n}</span>`).join('')}</td>
+      <td class="sum-col">${d.sum || '--'}</td>
+    </tr>
+  `).join('');
+}
+
+/* ============================================================
+   Load Review History
+   ============================================================ */
+async function loadReviewHistory() {
+  const history = await api('history?limit=3');
+  if (!history || !Array.isArray(history) || history.length < 2) return;
+
+  const last3 = history.slice(-3).reverse();
+  document.getElementById('reviewHistory').innerHTML = last3.map(d => `
+    <div class="review-item">
+      <div class="review-period">${d.period}</div>
+      <div class="review-balls">
+        ${(d.front||[]).map(n => `<div class="mini-ball front">${n}</div>`).join('')}
+        <div style="width:4px;"></div>
+        ${(d.back||[]).map(n => `<div class="mini-ball back">${n}</div>`).join('')}
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);flex-shrink:0;font-family:var(--font-mono);">和值 ${d.sum}</div>
+    </div>
+  `).join('');
+}
+
+/* ============================================================
+   Load Settings
+   ============================================================ */
+async function loadSettings() {
+  const status = await api('status');
+  document.getElementById('settingsDltCount').textContent = `${status.dlt_count || '--'}期`;
+  document.getElementById('settingsSsqCount').textContent = `${status.ssq_count || '--'}期`;
+  document.getElementById('settingsDltLatest').textContent = status.dlt_latest || '--';
+}
+
+async function updateData() {
+  showToast('正在更新数据...');
+  try {
+    await fetch('http://localhost:5123/?update=1', { signal: AbortSignal.timeout(4000) });
+    showToast('数据更新成功');
+    loadSettings();
+  } catch(e) { showToast('更新失败，请重试'); }
+}
+
+/* ============================================================
+   Refresh All
+   ============================================================ */
+function refreshAll() {
+  if (currentTab === 'home') renderHome();
+  else if (currentTab === 'predict') doPredict();
+  else if (currentTab === 'trend') renderTrend();
+  else if (currentTab === 'history') renderHistory();
+  else if (currentTab === 'settings') loadSettings();
+}
+
+/* ============================================================
+   Init
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  setInterval(() => { if (currentTab === 'home') renderHome(); }, 60000);
+  renderHome();
+});
+</script>
+</body>
+</html>

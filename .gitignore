@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+venv/
+
+# Data files (fetched at runtime)
+data/*.json
+!data/.gitkeep
+
+# Server logs
+server.log
+server.err
+
+# API key (NEVER commit this)
+config.json
+
+# Training artifacts
+best_params_dlt.json
+best_params_ssq.json
+dlt_adaptive_params.json
