@@ -780,10 +780,13 @@ def handle_request(raw_request):
 
 def run_server(host='0.0.0.0', port=None):
     """Run HTTP server using raw sockets.
-    Port priority: $ZEABUR_PORT > $PORT > default 5123
+    Port priority: $WEB_PORT > $ZEABUR_PORT > $PORT > default 5123
     """
     if port is None:
-        port = int(os.environ.get('ZEABUR_PORT') or os.environ.get('PORT') or '5123')
+        _raw = os.environ.get('WEB_PORT') or os.environ.get('ZEABUR_PORT') or os.environ.get('PORT') or ''
+        # Strip possible shell literal like ${WEB_PORT}
+        _raw = _raw.strip().lstrip('$').strip('{}').strip()
+        port = int(_raw) if _raw.isdigit() else 5123
     # Pre-load HTML
     try:
         open(BASE_DIR / 'web' / 'index.html', 'rb').read()
