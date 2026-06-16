@@ -1668,10 +1668,6 @@ body {
     <span class="material-symbols-outlined">fact_check</span>
     <span>复盘</span>
   </div>
-  <div class="tab-item" onclick="switchTab('review')" id="tabBtn-review">
-    <span class="material-symbols-outlined">fact_check</span>
-    <span>复盘</span>
-  </div>
   <div class="tab-item" onclick="switchTab('history')" id="tabBtn-history">
     <span class="material-symbols-outlined">history</span>
     <span>历史</span>
@@ -1686,7 +1682,7 @@ body {
 /* ============================================================
    State
    ============================================================ */
-const API = 'http://localhost:5123/api';
+const API = (localStorage.getItem('lottery_api_base') || (window.location.protocol + '//' + window.location.host)) + '/api';
 let currentKind = 'dlt';
 let currentTab = 'home';
 let selectedComboType = null; // {fc, bc} set when user picks a combo type
