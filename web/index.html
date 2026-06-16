@@ -1630,6 +1630,10 @@ body {
     <span class="material-symbols-outlined">auto_awesome</span>
     <span>预测</span>
   </div>
+  <div class="tab-item" onclick="switchTab('review')" id="tabBtn-review">
+    <span class="material-symbols-outlined">fact_check</span>
+    <span>复盘</span>
+  </div>
   <div class="tab-item" onclick="switchTab('history')" id="tabBtn-history">
     <span class="material-symbols-outlined">history</span>
     <span>历史</span>
@@ -1714,6 +1718,7 @@ function switchTab(tab) {
     doAIPool();
   } else if (tab === 'trend') renderTrend();
   else if (tab === 'history') renderHistory();
+  else if (tab === 'review') loadReviewData();
   else if (tab === 'settings') loadSettings();
 }
 
@@ -1910,6 +1915,7 @@ async function doAIPool() {
     document.getElementById('predictPeriod').textContent = '\u7B2C ' + (data.for_period || '--') + ' \u671F';
     document.getElementById('predictTime').textContent = data.generated_at || '';
     renderPredCardAI(data, content, fc, bc);
+    saveReviewPrediction(data);
     loadReviewHistory();
     return;
   }
@@ -1939,6 +1945,7 @@ async function doAIPool() {
   document.getElementById('predictPeriod').textContent = '\u7B2C ' + (data.for_period || '--') + ' \u671F';
   document.getElementById('predictTime').textContent = data.generated_at || '';
   renderPredCardAI(data, content, selectedFront.size, selectedBack.size);
+  saveReviewPrediction(data);
   loadReviewHistory();
 }
 
@@ -2101,6 +2108,25 @@ async function renderPredCardAI(data, content, fc, bc) {
    ============================================================ */
 let lastAIData = null;
 
+
+function saveReviewPrediction(data) {
+  try {
+    var favs = JSON.parse(localStorage.getItem("lottery_favs") || "[]");
+    var exists = favs.some(function(f) { return f.period === data.for_period && f.kind === currentKind; });
+    if (exists) return;
+    var pred = data.prediction || {};
+    favs.unshift({
+      kind: currentKind,
+      type: "AI-auto",
+      front: (pred.front || []).join(","),
+      back: (pred.back || []).join(","),
+      period: data.for_period,
+      model: "Hermes AI",
+      time: new Date().toISOString()
+    });
+    localStorage.setItem("lottery_favs", JSON.stringify(favs.slice(0, 100)));
+  } catch(e) { /* ignore */ }
+}
 async function copyAIPred(type) {
   if (!lastAIData) {
     showToast('\u6CA1\u6709\u53EF\u590D\u5236\u7684\u9884\u6D4B\u6570\u636E');
@@ -2225,8 +2251,8 @@ async function renderHistory() {
   document.getElementById('historyBody').innerHTML = history.slice().reverse().slice(0,20).map(d => `
     <tr>
       <td class="period-col">${d.period}</td>
-      <td>${(d.front||[]).map(n => `<span class="tag front" style="padding:2px 5px;font-size:10px;">${n}</span>`).join('')}</td>
-      <td>${(d.back||[]).map(n => `<span class="tag back" style="padding:2px 5px;font-size:10px;">${n}</span>`).join('')}</td>
+      <td>${(d.front||[]).map(n => `<span class="tag front" style="width:24px;height:24px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:10px;">${n}</span>`).join('')}</td>
+      <td>${(d.back||[]).map(n => `<span class="tag back" style="width:24px;height:24px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:10px;">${n}</span>`).join('')}</td>
       <td class="sum-col">${d.sum || '--'}</td>
     </tr>
   `).join('');
@@ -2280,6 +2306,7 @@ function refreshAll() {
   else if (currentTab === 'predict') doPredict();
   else if (currentTab === 'trend') renderTrend();
   else if (currentTab === 'history') renderHistory();
+  else if (currentTab === 'review') loadReviewData();
   else if (currentTab === 'settings') loadSettings();
 }
 
