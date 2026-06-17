@@ -766,9 +766,10 @@ def handle_request(raw_request):
                     body = b'<html><body><h1>Frontend not found</h1></body></html>'
                 return make_response(200, 'text/html; charset=utf-8', body)
             else:
-                data = {'error': 'Not found'}
+                body = json.dumps({'error': 'Not found'}).encode('utf-8')
+                return make_response(404, 'application/json; charset=utf-8', body)
             body = json.dumps(data, ensure_ascii=False).encode('utf-8')
-            return make_response(404, 'application/json; charset=utf-8', body)
+            return make_response(200, 'application/json; charset=utf-8', body)
         
         body = json.dumps(data, ensure_ascii=False).encode('utf-8')
         return make_response(200, 'application/json; charset=utf-8', body)
