@@ -2255,24 +2255,7 @@ function saveReviewPrediction(data) {
     localStorage.setItem("lottery_favs", JSON.stringify(favs.slice(0, 100)));
   } catch(e) { /* ignore */ }
 }
-function saveReviewPrediction(data) {
-  try {
-    var favs = JSON.parse(localStorage.getItem("lottery_favs") || "[]");
-    var exists = favs.some(function(f) { return f.period === data.for_period && f.kind === currentKind; });
-    if (exists) return;
-    var pred = data.prediction || {};
-    favs.unshift({
-      kind: currentKind,
-      type: "AI-auto",
-      front: (pred.front || []).join(","),
-      back: (pred.back || []).join(","),
-      period: data.for_period,
-      model: "Hermes AI",
-      time: new Date().toISOString()
-    });
-    localStorage.setItem("lottery_favs", JSON.stringify(favs.slice(0, 100)));
-  } catch(e) { /* ignore */ }
-}
+
 
 async function copyAIPred(type) {
   if (!lastAIData) {
@@ -2455,8 +2438,10 @@ async function showReviewResult(type, actualFront, actualBack, actualPeriod, isA
     '<div><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">\u9884\u6D4B</div><div style="display:flex;gap:4px;flex-wrap:wrap;">' + pf.map(n => pbA(n, fh.includes(n))).join('') + '<span style="color:var(--text-muted);font-size:12px;display:flex;align-items:center;margin:0 2px;">+</span>' + pb.map(n => pbB(n, bh.includes(n))).join('') + '</div></div>' +
     '<div><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">\u5B9E\u5F00</div><div style="display:flex;gap:4px;flex-wrap:wrap;">' + actualFront.map(abF).join('') + '<span style="color:var(--text-muted);font-size:12px;display:flex;align-items:center;margin:0 2px;">+</span>' + actualBack.map(abB).join('') + '</div></div></div>' +
     '<div style="margin-top:12px;padding:8px 10px;background:var(--surface-container);border-radius:8px;"><div style="font-size:11px;"><span style="color:var(--success-emerald);font-weight:600;">\u2705 \u547D\u4E2D:</span> <span style="color:var(--text-primary);">' + (fh.length > 0 ? fh.join(', ') : '--') + (bh.length > 0 ? ' <span style="margin-left:6px;">+ ' + bh.join(', ') + '</span>' : '') + '</span></div><div style="font-size:11px;"><span style="color:var(--error);font-weight:600;">\u274C \u672A\u4E2D:</span> <span style="color:var(--text-muted);">' + (fm.length > 0 ? fm.join(', ') : '--') + (bm.length > 0 ? ' <span style="margin-left:6px;">+ ' + bm.join(', ') + '</span>' : '') + '</span></div></div>' +
-    '<div style="margin-top:8px;text-align:center;"><span style="font-size:11px;padding:3px 16px;border-radius:20px;font-weight:600;background:' + (fh.length >= 3 ? 'rgba(16,185,129,0.12);color:var(--success-emerald);' : 'rgba(100,100,100,0.1);color:var(--text-muted);') + ';border:1px solid ' + (fh.length >= 3 ? 'rgba(16,185,129,0.25)' : 'transparent') + ';
-</div></div>
+    '<div style="margin-top:8px;text-align:center;"><span style="font-size:11px;padding:3px 16px;border-radius:20px;font-weight:600;background:' + (fh.length >= 3 ? 'rgba(16,185,129,0.12);color:var(--success-emerald);' : 'rgba(100,100,100,0.1);color:var(--text-muted);') + ';border:1px solid ' + (fh.length >= 3 ? 'rgba(16,185,129,0.25)' : 'transparent') + ';' +
+
+    '</div></div>';
+
 }
 
 function appendReviewNote(container,text,type) {
@@ -2481,10 +2466,6 @@ async function renderTrend() {
 
   if (trend.error) return;
 
-  if (history && Array.isArray(history) && history.length > 0) {
-    const sums = history.slice(-15).map(d => d.sum).reverse();
-    const min = Math.min(...sums) - 5;
-    const max = Math.max(...sums) + 5;
 
   if (trend.error) return;
 
