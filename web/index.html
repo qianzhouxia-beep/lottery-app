@@ -2320,32 +2320,32 @@ async function doReview(type) {
   const overlay = document.createElement('div');
   overlay.id = 'reviewOverlay';
   overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
-  overlay.innerHTML = `\r
-    <div style="background:var(--surface-container);border:1px solid var(--border-subtle);border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:85vh;overflow-y:auto;">\r
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">\r
-        <div style="font-size:15px;font-weight:700;color:var(--text-primary);">\r
-          <span class="material-symbols-outlined" style="font-size:20px;vertical-align:middle;margin-right:6px;color:var(--primary);">fact_check</span>\r
-          \u9884\u6D4B\u590D\u76D8\r
-        </div>\r
-        <button onclick="document.getElementById('reviewOverlay').remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:22px;padding:4px;line-height:1;">&times;</button>\r
-      </div>\r
-      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;">\r
-        \u671F\u53F7: <strong style="color:var(--primary);">${period}</strong> &nbsp;|&nbsp; \u7B56\u7565: <strong>${type === 'normal' ? '\u6B63\u9009' : '\u53CD\u9009'}</strong>\r
-      </div>\r
-      <div style="background:var(--surface-container-low);border-radius:10px;padding:12px;margin-bottom:14px;">\r
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">\u9884\u6D4B\u53F7\u7801</div>\r
-        <div style="display:flex;gap:5px;flex-wrap:wrap;">${(predFront||[]).map(n => '<div class="ball front size-sm">' + n + '</div>').join('')}<span style="color:var(--text-muted);font-size:16px;display:flex;align-items:center;">+</span>${(predBack||[]).map(n => '<div class="ball back size-sm">' + n + '</div>').join('')}</div>\r
-      </div>\r
-      <div style="display:flex;flex-direction:column;gap:8px;">\r
-        <button id="reviewAutoBtn" onclick="doReviewFetch('${type}')" class="btn-primary" style="width:100%;justify-content:center;">\r
-          <span class="material-symbols-outlined" style="font-size:16px;">auto_fetch</span> \u81EA\u52A8\u83B7\u53D6\u6700\u65B0\u5F00\u5956\u53F7\u7801\u5E76\u590D\u76D8\r
-        </button>\r
-        <button onclick="showReviewManual('${type}')" class="btn-secondary" style="width:100%;justify-content:center;">\r
-          <span class="material-symbols-outlined" style="font-size:16px;">edit</span> \u624B\u52A8\u8F93\u5165\u5F00\u5956\u53F7\u7801\r
-        </button>\r
-      </div>\r
-      <div id="reviewResultArea"></div>\r
-    </div>\r
+  overlay.innerHTML = `
+    <div style="background:var(--surface-container);border:1px solid var(--border-subtle);border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:85vh;overflow-y:auto;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div style="font-size:15px;font-weight:700;color:var(--text-primary);">
+          <span class="material-symbols-outlined" style="font-size:20px;vertical-align:middle;margin-right:6px;color:var(--primary);">fact_check</span>
+          \u9884\u6D4B\u590D\u76D8
+        </div>
+        <button onclick="document.getElementById('reviewOverlay').remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:22px;padding:4px;line-height:1;">&times;</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;">
+        \u671F\u53F7: <strong style="color:var(--primary);">${period}</strong> &nbsp;|&nbsp; \u7B56\u7565: <strong>${type === 'normal' ? '\u6B63\u9009' : '\u53CD\u9009'}</strong>
+      </div>
+      <div style="background:var(--surface-container-low);border-radius:10px;padding:12px;margin-bottom:14px;">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">\u9884\u6D4B\u53F7\u7801</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">${(predFront||[]).map(n => '<div class="ball front size-sm">' + n + '</div>').join('')}<span style="color:var(--text-muted);font-size:16px;display:flex;align-items:center;">+</span>${(predBack||[]).map(n => '<div class="ball back size-sm">' + n + '</div>').join('')}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button id="reviewAutoBtn" onclick="doReviewFetch('${type}')" class="btn-primary" style="width:100%;justify-content:center;">
+          <span class="material-symbols-outlined" style="font-size:16px;">auto_fetch</span> \u81EA\u52A8\u83B7\u53D6\u6700\u65B0\u5F00\u5956\u53F7\u7801\u5E76\u590D\u76D8
+        </button>
+        <button onclick="showReviewManual('${type}')" class="btn-secondary" style="width:100%;justify-content:center;">
+          <span class="material-symbols-outlined" style="font-size:16px;">edit</span> \u624B\u52A8\u8F93\u5165\u5F00\u5956\u53F7\u7801
+        </button>
+      </div>
+      <div id="reviewResultArea"></div>
+    </div>
   `;
   document.body.appendChild(overlay);
 }
@@ -2411,50 +2411,50 @@ function showReviewManual(type) {
   resultArea.appendChild(div);
 }
 
-\r
-async function submitManualReview(type) {\r
-  const frontStr = document.getElementById('manualFrontInput').value.trim();\r
-  const backStr = document.getElementById('manualBackInput').value.trim();\r
-  const front = frontStr.split(/[\\s,]+/).map(Number).filter(n => n >= 1 && n <= 35);\r
-  const back = backStr.split(/[\\s,]+/).map(Number).filter(n => n >= 1 && n <= 12);\r
-  if (front.length !== 5) { showToast('\u524D\u533A\u9700\u89815\u4E2A\u53F7\u7801'); return; }\r
-  if (back.length !== 2) { showToast('\u540E\u533A\u9700\u89812\u4E2A\u53F7\u7801'); return; }\r
-  const history = await api('history?limit=1');\r
-  const period = (history && history[0] && history[0].period) ? history[0].period : (lastAIData.for_period || '');\r
-  await showReviewResult(type, front, back, period, false);\r
-  try {\r
-    const r = await apiPost('self_learn', { period: period, front: front, back: back });\r
-    const ra = document.getElementById('reviewResultArea');\r
-    if (r && r.success) appendReviewNote(ra, '\u2705 \u5DF2\u63D0\u4EA4\u5230\u5B66\u4E60\u5F15\u64CE (\u524D\u533A' + (r.front_hits||0) + '/5, \u540E\u533A' + (r.back_hits||0) + '/2)', 'success');\r\n  } catch(e) { appendReviewNote(document.getElementById('reviewResultArea'), '\u540E\u7AEF\u5B66\u4E60\u63D0\u4EA4\u5931\u8D25: ' + e.message, 'warning'); }\r
-}\r
-\r
-async function showReviewResult(type, actualFront, actualBack, actualPeriod, isAuto) {\r
-  const ra = document.getElementById('reviewResultArea');\r
-  const src = type === 'normal' ? lastAIData.prediction : lastAIData.reverse;\r
-  const pf = src.front || [], pb = src.back || [];\r
-  const afSet = new Set(actualFront.map(Number)), abSet = new Set(actualBack.map(Number));\r
-  const fh = pf.filter(n => afSet.has(Number(n))), bh = pb.filter(n => abSet.has(Number(n)));\r
-  const fm = pf.filter(n => !afSet.has(Number(n))), bm = pb.filter(n => !abSet.has(Number(n)));\r
-  let pl = '\u672A\u4E2D\u5956';\r
-  if (fh.length === 5 && bh.length === 2) pl = '\u4E00\u7B49\u5956';\r
-  else if (fh.length === 5) pl = '\u4E8C\u7B49\u5956';\r
-  else if (fh.length === 4 && bh.length === 2) pl = '\u4E09\u7B49\u5956';\r
-  else if (fh.length === 4 || (fh.length === 3 && bh.length === 2)) pl = '\u56DB\u7B49\u5956';\r
-  else if (fh.length >= 2 || bh.length >= 1) pl = '\u4E94\u7B49\u5956/\u5B89\u6170';\r
-  const acc = Math.round(((fh.length / 5) * 60 + (bh.length / 2) * 40));\r
-  const pbA = (n, hit) => hit ? '<div class="ball front size-sm" style="box-shadow:0 0 0 2px var(--success-emerald),0 0 8px rgba(16,185,129,0.5);">' + n + '</div>' : '<div class="ball size-sm" style="background:rgba(255,255,255,0.08);color:var(--text-muted);text-decoration:line-through;opacity:0.6;">' + n + '</div>';\r
-  const pbB = (n, hit) => hit ? '<div class="ball back size-sm" style="box-shadow:0 0 0 2px var(--success-emerald),0 0 8px rgba(16,185,129,0.5);">' + n + '</div>' : '<div class="ball size-sm" style="background:rgba(255,255,255,0.08);color:var(--text-muted);text-decoration:line-through;opacity:0.6;">' + n + '</div>';\r
-  const abF = (n) => '<div class="mini-ball front" style="width:26px;height:26px;font-size:10px;">' + String(n).padStart(2,'0') + '</div>';\r
-  const abB = (n) => '<div class="mini-ball back" style="width:26px;height:26px;font-size:10px;">' + String(n).padStart(2,'0') + '</div>';\r
-  ra.innerHTML = '<div style="margin-top:14px;padding:14px;background:var(--surface-container-low);border-radius:12px;border:1px solid var(--border-subtle);">' +\r
-    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div style="font-size:13px;font-weight:700;color:var(--text-primary);">\u590D\u76D8\u7ED3\u679C</div><div style="font-size:11px;color:var(--text-muted);">\u5B9E\u5F00: <strong style="color:var(--primary);">' + actualPeriod + '</strong></div></div>' +\r
-    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px;background:' + (acc >= 40 ? 'rgba(16,185,129,0.08)' : 'rgba(245,158,11,0.08)') + ';border-radius:10px;border:1px solid ' + (acc >= 40 ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)') + ';">' +\r
-    '<div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:' + (acc >= 40 ? 'var(--success-emerald)' : 'var(--warning-amber)') + ';">' + acc + '%</div>' +\r
-    '<div><div style="font-size:12px;font-weight:600;color:var(--text-primary);">\u547D\u4E2D\u7387</div><div style="font-size:10px;color:var(--text-muted);">\u524D\u533A ' + fh.length + '/5 \u00B7 \u540E\u533A ' + bh.length + '/2</div></div></div>' +\r
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">' +\r
-    '<div><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">\u9884\u6D4B</div><div style="display:flex;gap:4px;flex-wrap:wrap;">' + pf.map(n => pbA(n, fh.includes(n))).join('') + '<span style="color:var(--text-muted);font-size:12px;display:flex;align-items:center;margin:0 2px;">+</span>' + pb.map(n => pbB(n, bh.includes(n))).join('') + '</div></div>' +\r
-    '<div><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">\u5B9E\u5F00</div><div style="display:flex;gap:4px;flex-wrap:wrap;">' + actualFront.map(abF).join('') + '<span style="color:var(--text-muted);font-size:12px;display:flex;align-items:center;margin:0 2px;">+</span>' + actualBack.map(abB).join('') + '</div></div></div>' +\r
-    '<div style="margin-top:12px;padding:8px 10px;background:var(--surface-container);border-radius:8px;"><div style="font-size:11px;"><span style="color:var(--success-emerald);font-weight:600;">\u2705 \u547D\u4E2D:</span> <span style="color:var(--text-primary);">' + (fh.length > 0 ? fh.join(', ') : '--') + (bh.length > 0 ? ' <span style="margin-left:6px;">+ ' + bh.join(', ') + '</span>' : '') + '</span></div><div style="font-size:11px;"><span style="color:var(--error);font-weight:600;">\u274C \u672A\u4E2D:</span> <span style="color:var(--text-muted);">' + (fm.length > 0 ? fm.join(', ') : '--') + (bm.length > 0 ? ' <span style="margin-left:6px;">+ ' + bm.join(', ') + '</span>' : '') + '</span></div></div>' +\r
+
+async function submitManualReview(type) {
+  const frontStr = document.getElementById('manualFrontInput').value.trim();
+  const backStr = document.getElementById('manualBackInput').value.trim();
+  const front = frontStr.split(/[\s,]+/).map(Number).filter(n => n >= 1 && n <= 35);
+  const back = backStr.split(/[\s,]+/).map(Number).filter(n => n >= 1 && n <= 12);
+  if (front.length !== 5) { showToast('前区需5个号码'); return; }
+  if (back.length !== 2) { showToast('后区需2个号码'); return; }
+  const history = await api('history?limit=1');
+  const period = (history && history[0] && history[0].period) ? history[0].period : (lastAIData.for_period || '');
+  await showReviewResult(type, front, back, period, false);
+  try {
+    const r = await apiPost('self_learn', { period: period, front: front, back: back });
+    if (r && r.ok) showToast('复盘数据已记录');
+  } catch(e) { console.log('self_learn:', e); }
+}
+
+async function showReviewResult(type, actualFront, actualBack, actualPeriod, isAuto) {
+  const ra = document.getElementById('reviewResultArea');
+  const src = type === 'normal' ? lastAIData.prediction : lastAIData.reverse;
+  const pf = src.front || [], pb = src.back || [];
+  const afSet = new Set(actualFront.map(Number)), abSet = new Set(actualBack.map(Number));
+  const fh = pf.filter(n => afSet.has(Number(n))), bh = pb.filter(n => abSet.has(Number(n)));
+  const fm = pf.filter(n => !afSet.has(Number(n))), bm = pb.filter(n => !abSet.has(Number(n)));
+  let pl = '\u672A\u4E2D\u5956';
+  if (fh.length === 5 && bh.length === 2) pl = '\u4E00\u7B49\u5956';
+  else if (fh.length === 5) pl = '\u4E8C\u7B49\u5956';
+  else if (fh.length === 4 && bh.length === 2) pl = '\u4E09\u7B49\u5956';
+  else if (fh.length === 4 || (fh.length === 3 && bh.length === 2)) pl = '\u56DB\u7B49\u5956';
+  else if (fh.length >= 2 || bh.length >= 1) pl = '\u4E94\u7B49\u5956/\u5B89\u6170';
+  const acc = Math.round(((fh.length / 5) * 60 + (bh.length / 2) * 40));
+  const pbA = (n, hit) => hit ? '<div class="ball front size-sm" style="box-shadow:0 0 0 2px var(--success-emerald),0 0 8px rgba(16,185,129,0.5);">' + n + '</div>' : '<div class="ball size-sm" style="background:rgba(255,255,255,0.08);color:var(--text-muted);text-decoration:line-through;opacity:0.6;">' + n + '</div>';
+  const pbB = (n, hit) => hit ? '<div class="ball back size-sm" style="box-shadow:0 0 0 2px var(--success-emerald),0 0 8px rgba(16,185,129,0.5);">' + n + '</div>' : '<div class="ball size-sm" style="background:rgba(255,255,255,0.08);color:var(--text-muted);text-decoration:line-through;opacity:0.6;">' + n + '</div>';
+  const abF = (n) => '<div class="mini-ball front" style="width:26px;height:26px;font-size:10px;">' + String(n).padStart(2,'0') + '</div>';
+  const abB = (n) => '<div class="mini-ball back" style="width:26px;height:26px;font-size:10px;">' + String(n).padStart(2,'0') + '</div>';
+  ra.innerHTML = '<div style="margin-top:14px;padding:14px;background:var(--surface-container-low);border-radius:12px;border:1px solid var(--border-subtle);">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div style="font-size:13px;font-weight:700;color:var(--text-primary);">\u590D\u76D8\u7ED3\u679C</div><div style="font-size:11px;color:var(--text-muted);">\u5B9E\u5F00: <strong style="color:var(--primary);">' + actualPeriod + '</strong></div></div>' +
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px;background:' + (acc >= 40 ? 'rgba(16,185,129,0.08)' : 'rgba(245,158,11,0.08)') + ';border-radius:10px;border:1px solid ' + (acc >= 40 ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)') + ';">' +
+    '<div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:' + (acc >= 40 ? 'var(--success-emerald)' : 'var(--warning-amber)') + ';">' + acc + '%</div>' +
+    '<div><div style="font-size:12px;font-weight:600;color:var(--text-primary);">\u547D\u4E2D\u7387</div><div style="font-size:10px;color:var(--text-muted);">\u524D\u533A ' + fh.length + '/5 \u00B7 \u540E\u533A ' + bh.length + '/2</div></div></div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">' +
+    '<div><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">\u9884\u6D4B</div><div style="display:flex;gap:4px;flex-wrap:wrap;">' + pf.map(n => pbA(n, fh.includes(n))).join('') + '<span style="color:var(--text-muted);font-size:12px;display:flex;align-items:center;margin:0 2px;">+</span>' + pb.map(n => pbB(n, bh.includes(n))).join('') + '</div></div>' +
+    '<div><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px;">\u5B9E\u5F00</div><div style="display:flex;gap:4px;flex-wrap:wrap;">' + actualFront.map(abF).join('') + '<span style="color:var(--text-muted);font-size:12px;display:flex;align-items:center;margin:0 2px;">+</span>' + actualBack.map(abB).join('') + '</div></div></div>' +
+    '<div style="margin-top:12px;padding:8px 10px;background:var(--surface-container);border-radius:8px;"><div style="font-size:11px;"><span style="color:var(--success-emerald);font-weight:600;">\u2705 \u547D\u4E2D:</span> <span style="color:var(--text-primary);">' + (fh.length > 0 ? fh.join(', ') : '--') + (bh.length > 0 ? ' <span style="margin-left:6px;">+ ' + bh.join(', ') + '</span>' : '') + '</span></div><div style="font-size:11px;"><span style="color:var(--error);font-weight:600;">\u274C \u672A\u4E2D:</span> <span style="color:var(--text-muted);">' + (fm.length > 0 ? fm.join(', ') : '--') + (bm.length > 0 ? ' <span style="margin-left:6px;">+ ' + bm.join(', ') + '</span>' : '') + '</span></div></div>' +
     '<div style="margin-top:8px;text-align:center;"><span style="font-size:11px;padding:3px 16px;border-radius:20px;font-weight:600;background:' + (fh.length >= 3 ? 'rgba(16,185,129,0.12);color:var(--success-emerald);' : 'rgba(100,100,100,0.1);color:var(--text-muted);') + ';border:1px solid ' + (fh.length >= 3 ? 'rgba(16,185,129,0.25)' : 'transparent') + ';
 </div></div>
 }
