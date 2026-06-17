@@ -2375,25 +2375,42 @@ function showReviewManual(type) {
   const pf = (src.front || []), pb = (src.back || []);
   const fv = pf.join(' ');
   const bv = pb.join(' ');
-  const html = '<div style="margin-top:12px;padding:12px;background:var(--surface-container-low);border-radius:10px;">' +
-    '<div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">输入开奖号码 (空格分隔)</div>' +
-    '<div style="margin-bottom:8px;">' +
-    '<input id="manualFrontInput" type="text" placeholder="前区, 例: 4 11 12 13 25" ' +
-    'value="' + fv + '" ' +
-    'style="width:100%;padding:8px 10px;background:var(--surface-container);border:1px solid var(--border-subtle);' +
-    'border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;box-sizing:border-box;outline:none;">' +
-    '</div>' +
-    '<div style="margin-bottom:10px;">' +
-    '<input id="manualBackInput" type="text" placeholder="后区, 例: 4 8" ' +
-    'value="' + bv + '" ' +
-    'style="width:100%;padding:8px 10px;background:var(--surface-container);border:1px solid var(--border-subtle);' +
-    'border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;box-sizing:border-box;outline:none;">' +
-    '</div>' +
-    '<button onclick="submitManualReview(\'' + type + '\')" class="btn-primary" style="width:100%;justify-content:center;">' +
-    '<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> 确认复盘' +
-    '</button></div>';
-  resultArea.innerHTML = html;
+  
+  const div = document.createElement('div');
+  div.style.cssText = 'margin-top:12px;padding:12px;background:var(--surface-container-low);border-radius:10px;';
+  
+  const label = document.createElement('div');
+  label.style.cssText = 'font-size:11px;color:var(--text-muted);margin-bottom:8px;';
+  label.textContent = '输入开奖号码 (空格分隔)';
+  
+  const input1 = document.createElement('input');
+  input1.id = 'manualFrontInput';
+  input1.type = 'text';
+  input1.placeholder = '前区, 例: 4 11 12 13 25';
+  input1.value = fv;
+  input1.style.cssText = 'width:100%;padding:8px 10px;background:var(--surface-container);border:1px solid var(--border-subtle);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;box-sizing:border-box;outline:none;margin-bottom:8px;';
+  
+  const input2 = document.createElement('input');
+  input2.id = 'manualBackInput';
+  input2.type = 'text';
+  input2.placeholder = '后区, 例: 4 8';
+  input2.value = bv;
+  input2.style.cssText = 'width:100%;padding:8px 10px;background:var(--surface-container);border:1px solid var(--border-subtle);border-radius:8px;color:var(--text-primary);font-family:var(--font-mono);font-size:13px;box-sizing:border-box;outline:none;margin-bottom:10px;';
+  
+  const btn = document.createElement('button');
+  btn.className = 'btn-primary';
+  btn.style.cssText = 'width:100%;justify-content:center;';
+  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> 确认复盘';
+  btn.onclick = function() { submitManualReview(type); };
+  
+  div.appendChild(label);
+  div.appendChild(input1);
+  div.appendChild(input2);
+  div.appendChild(btn);
+  resultArea.innerHTML = '';
+  resultArea.appendChild(div);
 }
+
 \r
 async function submitManualReview(type) {\r
   const frontStr = document.getElementById('manualFrontInput').value.trim();\r
